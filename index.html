@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>バドミントン大会 速報 ver.2.5.3</title>
+<title>バドミントン大会 速報 ver.2.5.2</title>
 <style>
 :root{--bg:#f3f6fa;--card:#fff;--ink:#172033;--muted:#64748b;--line:#dbe3ef;--accent:#1769aa;--green:#166534}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",Meiryo,sans-serif;background:var(--bg);color:var(--ink)}header{background:linear-gradient(135deg,#153b65,#1769aa);color:white;padding:18px 16px;position:sticky;top:0;z-index:10}header h1{font-size:19px;margin:0}header .meta{font-size:12px;opacity:.85;margin-top:5px}.wrap{max-width:1100px;margin:auto;padding:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}.tabs{display:flex;gap:4px;overflow:auto;margin-bottom:12px}.tabs button{border:0;border-radius:999px;padding:8px 12px;background:#e8eef6;font-weight:750;white-space:nowrap}.tabs button.on{background:var(--accent);color:#fff}.division{display:none}.division.on{display:block}h2{font-size:18px;border-left:5px solid var(--accent);padding-left:9px}h3{font-size:15px;margin:16px 0 8px}.table{overflow:auto;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;font-size:12px;background:#fff}th,td{padding:7px;border-bottom:1px solid #e8edf3;text-align:center;white-space:nowrap}th{background:#edf4fb}td:nth-child(2),th:nth-child(2){text-align:left}.winner{font-weight:850;color:var(--green)}.bracket{display:flex;gap:12px;overflow:auto}.round{min-width:230px}.match{border:1px solid var(--line);border-radius:10px;margin-bottom:10px;overflow:hidden;background:#fff}.mh{font-size:10px;color:var(--muted);background:#f1f5f9;padding:4px 7px}.p{padding:7px;border-top:1px solid #eef2f7}.p.win{font-weight:850;background:#ecfdf5}.scores{font-size:11px;color:var(--muted);padding:5px 7px;border-top:1px dashed #e2e8f0}.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.medal{border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;background:#fff}.medal b{font-size:18px}.hint{color:var(--muted);font-size:12px;line-height:1.6}.live{display:inline-block;background:#dcfce7;color:#166534;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:850}.error{background:#fff1f2;color:#991b1b;padding:10px;border-radius:10px}.setup input{width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;margin:5px 0 10px}.setup button{border:0;border-radius:8px;padding:9px 12px;background:var(--accent);color:white;font-weight:800}.preview-banner{display:none;background:#fff7ed;color:#9a3412;border-bottom:1px solid #fdba74;padding:8px 14px;text-align:center;font-size:12px;font-weight:850;position:sticky;top:0;z-index:20}.preview-banner.on{display:block}body.preview header{top:34px}@media(max-width:650px){.podium{grid-template-columns:1fr}.wrap{padding:10px}}
 
@@ -638,7 +638,7 @@ function liveBracket(x){
     const loc=i-st,m=rd[i],y=my[`r${r}:${i}`];if(y==null)continue;let ya,yb,src;
     if(r===0){ya=ys[loc*2];yb=ys[loc*2+1];src=leftSide?nameZone:W-nameZone}else{const pr=rounds[r-1].matches||[],pp=pr.length/2,ps=leftSide?0:pp;ya=my[`r${r-1}:${ps+loc*2}`];yb=my[`r${r-1}:${ps+loc*2+1}`];src=leftSide?xl(r-1):xr(r-1)}
     if(ya!=null)o+=`<path class="g" d="M ${src} ${ya} H ${xj}"/>`;if(yb!=null)o+=`<path class="g" d="M ${src} ${yb} H ${xj}"/>`;if(ya!=null&&yb!=null)o+=`<path class="g" d="M ${xj} ${Math.min(ya,yb)} V ${Math.max(ya,yb)}"/>`;o+=`<path class="g" d="M ${xj} ${y} H ${nx}"/>`;
-    if(m.winner){const wa=m.winner===m.a,wy=wa?ya:yb;if(wy!=null)o+=`<path class="r" d="M ${src} ${wy} H ${xj}${wy!==y?` V ${y}`:''} H ${nx}"/>`;const pg=playedGames(m);if(pg.length){const gx=(xj+nx)/2;o+=`<text class="gs" x="${gx}" y="${y+12}" text-anchor="middle">`+pg.map((g,ii)=>`<tspan x="${gx}" dy="${ii?8.5:0}">${g[0]}-${g[1]}</tspan>`).join('')+'</text>'}}
+    if(m.winner){const wa=m.winner===m.a,wy=wa?ya:yb;if(wy!=null){const toNext=r<R-2?` H ${nx}`:'';o+=`<path class="r public-winner-path-v252" d="M ${src} ${wy} H ${xj}${wy!==y?` V ${y}`:''}${toNext}"/>`;}const pg=playedGames(m);if(pg.length){const gx=(xj+nx)/2;o+=`<text class="gs" x="${gx}" y="${y+12}" text-anchor="middle">`+pg.map((g,ii)=>`<tspan x="${gx}" dy="${ii?8.5:0}">${g[0]}-${g[1]}</tspan>`).join('')+'</text>'}}
    }
   }
  }
@@ -664,6 +664,12 @@ function liveBracketCodeLayerV17(x){
 }
 liveBracket=function(x){const h=liveBracketV16Base(x),layer=liveBracketCodeLayerV17(x);return h.replace('</svg>',layer+'</svg>')};
 function matchHtml(m){const scores=(m.games||[]).filter(g=>g&&g[0]!=null&&g[1]!=null&&!(Number(g[0])===0&&Number(g[1])===0)).map(g=>g[0]+'-'+g[1]).join(' / ');return '<div class="match"><div class="mh">'+esc(m.code||'')+(m.winner?'　結果確定':'')+'</div><div class="p '+(m.winner===m.a?'win':'')+'">'+esc(m.a||'未定')+' <span class="hint">'+esc(m.teamA||'')+'</span></div><div class="p '+(m.winner===m.b?'win':'')+'">'+esc(m.b||'未定')+' <span class="hint">'+esc(m.teamB||'')+'</span></div>'+(scores?'<div class="scores">'+esc(scores)+'</div>':'')+'</div>'}
+
+// Ver.2.5.2:
+// The winner of the last side round (semifinal) is colored only up to that
+// semifinal junction. The outgoing line to the final center remains gray.
+// Once the final is decided, the existing final-result overlay colors ONLY
+// the champion side from that junction to the center/champion stem.
 
 </script>
 <script id="public-wheel-v1011">
