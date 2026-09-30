@@ -1319,10 +1319,13 @@ function matchHtml(m){const scores=(m.games||[]).filter(g=>g&&g[0]!=null&&g[1]!=
             redIds.has(q.id)&&
             q.sy!==q.ty
           );
-          const winnerBranchAlreadyReachesFinal=!!(
-            winnerIntoSemi&&betweenV2104(finalY,winnerIntoSemi.sy,winnerIntoSemi.ty)
+          const winnerBranchNeedsFinalLevel=!!(
+            winnerIntoSemi&&(
+              betweenV2104(finalY,winnerIntoSemi.sy,winnerIntoSemi.ty)||
+              ((winnerIntoSemi.ty-winnerIntoSemi.sy)*(finalY-winnerIntoSemi.ty)>0)
+            )
           );
-          return winnerBranchAlreadyReachesFinal
+          return winnerBranchNeedsFinalLevel
             ? `M ${e.sx} ${finalY} H ${e.tx}`
             : e.path;
         }
@@ -1341,10 +1344,15 @@ function matchHtml(m){const scores=(m.games||[]).filter(g=>g&&g[0]!=null&&g[1]!=
 
         if(R>2&&e.segmentRole==='destHalf'&&fm){
           const finalEdge=(edges||[]).find(q=>q&&q.to===fm&&q.sourceMatch===e.to),
-                finalistLost=!!(finalEdge&&!redIds.has(finalEdge.id)),
                 finalBeyondNode=(e.ty-e.sy)*(finalY-e.ty)>0;
 
-          if(finalistLost&&finalBeyondNode){
+          /* Web-page specific fix:
+             when the finalist's own semifinal branch needs to continue beyond
+             the semifinal node to reach finalY, extend THIS red branch to
+             finalY. This keeps the red vertical tied to the correct team side
+             instead of making the final connector look like it belongs to the
+             opponent side. */
+          if(finalEdge&&finalBeyondNode){
             return `M ${e.tx} ${e.sy} V ${finalY}`;
           }
         }
